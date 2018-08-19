@@ -53,7 +53,7 @@ public class Processo {
 		// Se nao existe um coordenador.
 		if (!resultadoRequisicao)
 			this.realizarEleicao();
-		
+		System.out.println("Fim da requisição.");
 		return resultadoRequisicao;
 	}
 	
@@ -68,6 +68,7 @@ public class Processo {
 	private void realizarEleicao () {
 		
 		// Primeiro consulta cada processo, adicionando o id de cada um em uma nova lista (etapa 2 do algoritmo).
+		System.out.println("Processo de eleição iniciado");
 		
 		LinkedList<Integer> idProcessosConsultados = new LinkedList<>();
 		for (Processo p : Anel.processosAtivos)
@@ -106,7 +107,7 @@ public class Processo {
 		//Define o novo coordenador.
 		for (Processo p : Anel.processosAtivos) {
 			if (p.getPid() == idNovoCoordenador) {
-				p.setEhCoordenador(false);
+				p.setEhCoordenador(true);
 				return true;
 			}
 		}
