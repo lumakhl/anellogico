@@ -10,25 +10,22 @@ public class Anel {
 	private final int INATIVO_COORDENADOR = 100000;
 	private final int INATIVO_PROCESSO = 80000;
 	
-	
-	private ArrayList<Processo> processosAtivos;
-	private Processo coordenador;
+	public static ArrayList<Processo> processosAtivos;
 
 	public Anel() {
 		processosAtivos = new ArrayList<Processo>();
 	}
 
-	public void adiciona() {
+	public void criaProcessos () {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
 					if (processosAtivos.isEmpty()) {
 						processosAtivos.add(new Processo(1, "Criado", true));
-						coordenador = processosAtivos.get(0);
 					} else {
 						processosAtivos.add(
-								new Processo(processosAtivos.get(processosAtivos.size() - 1).getPid() + 1, "Criação"));
+								new Processo(processosAtivos.get(processosAtivos.size() - 1).getPid() + 1, "Criaï¿½ï¿½o"));
 					}
 					try {
 						Thread.sleep(ADICIONA);
@@ -40,18 +37,12 @@ public class Anel {
 		}).start();
 	}
 
-	public void requisicao() {
+	public void fazRequisicoes () {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				Processo processoRequisita = processosAtivos.get(new Random().nextInt(processosAtivos.size()));
-				boolean teste = false;
-				for (Processo p : processosAtivos) {
-					if (p.isEhCoordenador())
-						teste = true;
-				}
-				if (!teste) 
-					eleicao(processoRequisita);	
+				processoRequisita.enviarRequisicao();
 				try{
 					Thread.sleep(REQUISICAO);
 				} catch (Exception e){
@@ -59,10 +50,6 @@ public class Anel {
 				}
 			}
 		}).start();
-	}
-	
-	public void eleicao(Processo processoConvocador){
-		
 	}
 
 }
