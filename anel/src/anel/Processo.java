@@ -2,21 +2,23 @@ package anel;
 
 import java.util.LinkedList;
 
+/**
+ * 
+ * @author Alex Serodio Goncalves e Luma Kuhl
+ *
+ */
 public class Processo {
 	
 	private int pid;
-	private String msg;
 	private boolean ehCoordenador;
 	
-	public Processo (int pid, String msg){
+	public Processo (int pid){
 		setPid(pid);
-		setMsg(msg);
 	}
 	
-	public Processo (int pid, String msg, boolean ehCoordenador){
+	public Processo (int pid, boolean ehCoordenador){
 		setPid(pid);
-		setMsg(msg);
-		setEhCoordenador(true);
+		setEhCoordenador(ehCoordenador);
 	}
 	
 	public boolean isEhCoordenador () {
@@ -35,14 +37,6 @@ public class Processo {
 		this.pid = pid;
 	}
 	
-	public String getMsg () {
-		return msg;
-	}
-	
-	public void setMsg (String msg) {
-		this.msg = msg;
-	}
-	
 	public boolean enviarRequisicao () {
 		boolean resultadoRequisicao = false;
 		for (Processo p : Anel.processosAtivos) {
@@ -53,7 +47,8 @@ public class Processo {
 		// Se nao existe um coordenador.
 		if (!resultadoRequisicao)
 			this.realizarEleicao();
-		System.out.println("Fim da requisição.");
+		
+		System.out.println("Fim da requisicao.");
 		return resultadoRequisicao;
 	}
 	
@@ -67,8 +62,9 @@ public class Processo {
 	
 	private void realizarEleicao () {
 		
-		// Primeiro consulta cada processo, adicionando o id de cada um em uma nova lista (etapa 2 do algoritmo).
-		System.out.println("Processo de eleição iniciado");
+		System.out.println("Processo de eleicao iniciado");
+		
+		// Primeiro consulta cada processo, adicionando o id de cada um em uma nova lista.
 		
 		LinkedList<Integer> idProcessosConsultados = new LinkedList<>();
 		for (Processo p : Anel.processosAtivos)
@@ -98,20 +94,16 @@ public class Processo {
 	}
 	
 	private boolean atualizarCoordenador (int idNovoCoordenador) {
-		// Garante que nao exista nenhum outro processo cadastrado como coordenador.
-		for (Processo p : Anel.processosAtivos) {
-			if (p.isEhCoordenador())
+		// Garante que nao exista nenhum outro processo cadastrado como coordenador,
+		// a nao ser o novo coordenador.
+		
+		for (Processo p : Anel.processosAtivos) {			
+			if (p.getPid() == idNovoCoordenador)
+				p.setEhCoordenador(true);
+			else
 				p.setEhCoordenador(false);
 		}
 		
-		//Define o novo coordenador.
-		for (Processo p : Anel.processosAtivos) {
-			if (p.getPid() == idNovoCoordenador) {
-				p.setEhCoordenador(true);
-				return true;
-			}
-		}
-		
-		return false;
+		return true;
 	}
 }
